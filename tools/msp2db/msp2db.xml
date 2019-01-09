@@ -1,0 +1,113 @@
+<tool id="mspurity_msp2db" name="msp2db" version="1.0">
+    <description> - create a msPurity SQLite database from MSP files</description>
+    <stdio>
+        <exit_code level="fatal" range="1:"/>
+    </stdio>
+    <version_command>msp2db --version</version_command>
+    <command><![CDATA[
+
+#if $input.format == "data_collection"
+    mkdir msp_files
+    &&
+    #for $fn in $input.source
+        #if str( $fn ).endswith(".dat")
+            ln -s '$fn' './msp_files/$fn.name'
+            &&
+        #end if
+    #end for
+
+msp2db
+
+#if $input.format == "single_file"
+    #if str( $input.source ).endswith(".dat")
+        --msp_pth $msp_pth
+    #end if
+#else
+    --msp_pth msp_files
+#end if
+
+--source $source
+--out_pth $out_pth
+--db_type "sqlite"
+--schema $schema
+--chunk 200
+
+#if $mslevel and $mslevel is not None:
+    --mslevel $mslevel
+#else
+    --mslevel 0
+#end if
+
+]]></command>
+    <inputs>
+        <conditional name="input">
+            <param name="format" type="select" label="Choose source for the dataset" >
+                <option value="data_collection">Data collection (*.msp files)</option>
+                <option value="single_file">Single msp file</option>
+            </param>
+            <when value="single_file">
+                <param name="msp_pth" type="data" format="msp,txt" label="MSP file" />
+            </when>
+            <when value="data_collection">
+                <param name="msp_pth" type="data_collection" format="msp,txt" label="MSP files" />
+            </when>
+        </conditional>
+        <param argument="--source" name="source" type="text" label="Name of spectral library (e.g. MassBank, LocalLibrary, LipidBlast)" />
+        <param argument="--schema" name="schema" type="select" label="Type of msp schema / format">
+            <option value="mona" selected="True">MassBank of North America (MoNA)</option>
+            <option value="massbank">European MassBank</option>
+        </param>
+        <param argument="--mslevel" name="mslevel" type="integer" optional="true" label="ms level of fragmentation if not detailed in msp file" />
+    </inputs>
+    <outputs>
+        <data name="out_pth" format="sqlite" label="${tool.name} on ${on_string}: msPurity database containing library fragmenation spectra" />
+    </outputs>
+
+    <tests>
+        <test>
+            <param name="msp_pth" value="test.msp" ftype="msp" />
+            <param name="source" value="test" />
+            <param name="schema" value="mona" />
+            <param name="mslevel" value="2" />
+            <output name="out_pth" value="report_pls_01.xt" ftype="sqlite"/>
+        </test>
+    </tests>
+    <help>
+<![CDATA[
+msp2db
+==============================
+
+..
+
+----------------
+
+Description
+-----------
+
+|
+
+Tool to create a SQLite database from a singele or collection of MSP mass spectromertry spectra file(s). The tool is compatible with MSP files formated (schema) as MassBank records or as MoNA records. The resulting SQLite database can be used for msPurity's spectral matching.
+
+
+Github respository (source code)
+--------------------------------
+
+https://github.com/computational-metabolomics/msp2db-galaxy/
+
+
+Developers and contributors
+---------------------------
+
+- **Ralf Weber (r.j.weber@bham.ac.uk) - University of Birmingham (UK)**
+- **Thomas Lawson (tnl495@bham.ac.uk) - University of Birmingham (UK)**
+
+| 
+
+]]> 
+    </help>
+    <citations>
+        <citation type="doi">10.18129/B9.bioc.msPurity</citation>
+        <citation type="doi">10.1021/acs.analchem.6b04358</citation>
+    </citations>
+</tool>
+
