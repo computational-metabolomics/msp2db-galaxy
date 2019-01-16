@@ -1,14 +1,12 @@
 <tool id="mspurity_msp2db" name="msp2db" version="1.0">
     <description> - create a msPurity SQLite database from MSP files</description>
     <requirements>
-        <requirement type="package" version="0.0.5">mps2db</requirement>
+        <requirement type="package" version="0.0.5">msp2db</requirement>
     </requirements>
     <stdio>
         <exit_code level="fatal" range="1:"/>
     </stdio>
-    <version_command>msp2db --version</version_command>
     <command><![CDATA[
-
 #if $input.format == "data_collection"
     mkdir msp_files
     &&
