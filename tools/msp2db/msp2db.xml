@@ -62,14 +62,14 @@ msp2db
             <param name="input|msp_pth" value="AC000001.txt" ftype="txt" />
             <param name="source" value="test" />
             <param name="schema" value="massbank" />
-            <output name="out_pth" file="AC000001.sqlite" ftype="sqlite" />
+            <output name="out_pth" file="AC000001.sqlite" ftype="sqlite" compare="sim_size"/>
         </test>
         <test>
             <param name="input|format" value="single_file" />
             <param name="input|msp_pth" value="MoNA-export-MassBank-small.msp" ftype="msp" />
             <param name="source" value="test" />
             <param name="schema" value="mona" />
-            <output name="out_pth" file="MoNA-export-MassBank-small.sqlite" ftype="sqlite"/>
+            <output name="out_pth" file="MoNA-export-MassBank-small.sqlite" ftype="sqlite" compare="sim_size"/>
         </test>
         <test>
             <param name="input|format" value="data_collection" />
@@ -81,7 +81,7 @@ msp2db
             </param>
             <param name="source" value="test" />
             <param name="schema" value="massbank" />
-            <output name="out_pth" file="AC000001_UO000002.sqlite" ftype="sqlite"/>
+            <output name="out_pth" file="AC000001_UO000002.sqlite" ftype="sqlite" compare="sim_size"/>
         </test>
     </tests>
     <help>
