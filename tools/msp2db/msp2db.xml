@@ -1,0 +1,138 @@
+<tool id="msp2db" name="msp2db" version="1.0">
+    <description> - create a msPurity SQLite database from MSP files</description>
+    <requirements>
+        <requirement type="package" version="0.0.6">msp2db</requirement>
+    </requirements>
+    <stdio>
+        <exit_code level="fatal" range="1:"/>
+    </stdio>
+    <command><![CDATA[
+#if $input.format == "data_collection"
+    mkdir msp_files
+    &&
+    #for $fn in $input.msp_pth
+        #if str( $fn ).endswith(".dat")
+            ln -s '$fn' './msp_files/$fn.name'
+            &&
+        #end if
+    #end for
+#end if
+
+msp2db
+
+#if $input.format == "single_file"
+    --msp_pth "$input.msp_pth"
+#else
+    --msp_pth "msp_files"
+#end if
+
+--source $source
+--out_pth "$out_pth"
+
+#if $polarity != "ignore"
+    --polarity $polarity
+#end if
+
+--db_type sqlite
+--schema $schema
+--delete_tables
+--chunk 200
+
+]]></command>
+    <inputs>
+        <conditional name="input">
+            <param name="format" type="select" label="Choose source for the dataset" >
+                <option value="single_file" selected="True">Single msp file</option>
+                <option value="data_collection">Data collection (*.msp files)</option>
+            </param>
+            <when value="single_file">
+                <param name="msp_pth" type="data" format="msp,txt" label="MSP file" />
+            </when>
+            <when value="data_collection">
+                <param name="msp_pth" type="data_collection" format="msp,txt" label="MSP files" />
+            </when>
+        </conditional>
+        <param argument="--polarity" name="polarity" type="select" label="Polarity">
+            <option value="ignore">Ignore</option>
+            <option value="positive" selected="True">Positive</option>
+            <option value="negative">Negative</option>
+        </param>
+        <param argument="--source" name="source" type="text" label="Name of spectral library (e.g. Lipids, LocalLibrary)" />
+        <param argument="--schema" name="schema" type="select" label="Msp schema / format">
+            <option value="massbank" selected="True">European MassBank</option>
+            <option value="mona">MassBank of North America (MoNA)</option>
+        </param>
+    </inputs>
+    <outputs>
+        <data name="out_pth" format="sqlite" label="${tool.name} on ${on_string}: SQLite database of library (reference) spectra" />
+    </outputs>
+    <tests>
+        <test>
+            <param name="input|format" value="single_file" />
+            <param name="input|msp_pth" value="AC000001.txt" ftype="txt" />
+            <param name="polarity" value="ignore" />
+            <param name="source" value="test" />
+            <param name="schema" value="massbank" />
+            <output name="out_pth" file="AC000001.sqlite" ftype="sqlite" compare="sim_size"/>
+        </test>
+        <test>
+            <param name="input|format" value="single_file" />
+            <param name="input|msp_pth" value="MoNA-export-MassBank-small.msp" ftype="msp" />
+            <param name="polarity" value="positive" />
+            <param name="source" value="test" />
+            <param name="schema" value="mona" />
+            <output name="out_pth" file="MoNA-export-MassBank-small.sqlite" ftype="sqlite" compare="sim_size"/>
+        </test>
+        <test>
+            <param name="input|format" value="data_collection" />
+            <param name="input|msp_pth">
+                <collection type="list">
+                    <element name="msp1" value="AC000001.txt" />
+                    <element name="msp2" value="UO000002.txt" />
+                </collection>
+            </param>
+            <param name="polarity" value="positive" />
+            <param name="source" value="test" />
+            <param name="schema" value="massbank" />
+            <output name="out_pth" file="AC000001_UO000002.sqlite" ftype="sqlite" compare="sim_size"/>
+        </test>
+    </tests>
+    <help>
+<![CDATA[
+msp2db
+==============================
+
+..
+
+----------------
+
+Description
+-----------
+
+|
+
+Tool to create a SQLite database from a singele or collection of MSP mass spectromertry spectra file(s). The tool is compatible with MSP files formated (schema) as MassBank records or as MoNA records. The resulting SQLite database can be used for msPurity's spectral matching.
+
+
+Github respository (source code)
+--------------------------------
+
+https://github.com/computational-metabolomics/msp2db-galaxy/
+
+
+Developers and contributors
+---------------------------
+
+- **Ralf Weber (r.j.weber@bham.ac.uk) - University of Birmingham (UK)**
+- **Thomas Lawson (tnl495@bham.ac.uk) - University of Birmingham (UK)**
+
+| 
+
+]]> 
+    </help>
+    <citations>
+        <citation type="doi">10.18129/B9.bioc.msPurity</citation>
+        <citation type="doi">10.1021/acs.analchem.6b04358</citation>
+    </citations>
+</tool>
+

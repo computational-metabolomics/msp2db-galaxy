@@ -1,0 +1,10 @@
+language: python
+
+before_install:
+ - pip install --upgrade pip setuptools
+ - pip install planemo
+
+script:
+ - planemo lint ${TRAVIS_BUILD_DIR}/tools/msp2db
+ - planemo test --conda_auto_init --conda_ensure_channels computational-metabolomics,tomnl,iuc,bioconda,conda-forge,defaults --galaxy_branch release_18.05 --conda_auto_install ${TRAVIS_BUILD_DIR}/tools/msp2db
+ 
