@@ -1,0 +1,9 @@
+owner: tomnl
+remote_repository_url: https://github.com/computational-metabolomics/msp2db-galaxy
+homepage_url:  https://github.com/computational-metabolomics/msp2db-galaxy
+categories: ["Metabolomics"]
+description: "[Metabolomics][MS/MS] msp2db sqlite database from MSP file"
+auto_tool_repositories:
+  name_template: "{{ tool_id }}"
+  description_template: "[Metabolomics][MS/MS] {{ tool_name }} {{description}}"
+long_description: "[Metabolomics][MS/MS] msp2db - Create sqlite database from MSP file"
