@@ -7,6 +7,7 @@
         <exit_code level="fatal" range="1:"/>
     </stdio>
     <command><![CDATA[
+
                     #if $input.format == "data_collection"
                         mkdir msp_files
                         &&
@@ -16,6 +17,8 @@
                                 &&
                             #end if
                         #end for
+                    #else
+                        [ ! -s '$input.msp_pth' ] && echo 'File empty' echo '$input.msp_pth'  && exit 0 ||
                     #end if
 
                     msp2db
@@ -63,7 +66,8 @@
             <option value="massbank" selected="True">European MassBank</option>
             <option value="mona">MassBank of North America (MoNA)</option>
         </param>
-        <param argument="--ignore_compound_lookup" checked="false" label=""
+        <param argument="--ignore_compound_lookup" checked="false"
+               label="Ignore compound lookup to PubChem"
                type="boolean" truevalue="--ignore_compound_lookup" falsevalue=""/>
 
     </inputs>
