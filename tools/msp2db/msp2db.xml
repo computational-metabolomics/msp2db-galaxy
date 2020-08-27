@@ -1,7 +1,7 @@
-<tool id="msp2db" name="msp2db" version="0.0.13+galaxy0">
+<tool id="msp2db" name="msp2db" version="0.0.14+galaxy0">
     <description> - create a msPurity SQLite database from MSP files</description>
     <requirements>
-        <requirement type="package" version="0.0.13">msp2db</requirement>
+        <requirement type="package" version="0.0.14">msp2db</requirement>
     </requirements>
     <stdio>
         <exit_code level="fatal" range="1:"/>
