@@ -129,7 +129,7 @@ Description
 
 |
 
-Tool to create a SQLite database from a singele or collection of MSP mass spectromertry spectra file(s). The tool is compatible with MSP files formated (schema) as MassBank records or as MoNA records. The resulting SQLite database can be used for msPurity's spectral matching.
+Tool to create a SQLite database from a single or collection of MSP mass spectromertry spectra file(s). The tool is compatible with MSP files formated (schema) as MassBank records or as MoNA records. The resulting SQLite database can be used for msPurity's spectral matching.
 
 
 Github respository (source code)
